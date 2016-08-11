@@ -60,11 +60,11 @@ class Solution
   #
 
   def all(prototype={})
-    #place solution here
+    all_records = Solution.collection.find(prototype)
   end
 
   def find_by_name(fname, lname)
-    #place solution here
+    found_by_name = Solution.collection.find({:first_name=>fname, :last_name=>lname}).projection(_id:false, number:true, first_name:true, last_name:true)
   end
 
   #
