@@ -43,16 +43,16 @@ class Solution
   #
 
   def clear_collection
-    cleared_collection = Solution.collection.delete_many
+    Solution.collection.delete_many
   end
 
   def load_collection(file_path)
     array_of_hashes = Solution.load_hash(file_path)
-    loaded_collection = Solution.collection.insert_many(array_of_hashes)
+    Solution.collection.insert_many(array_of_hashes)
   end
 
   def insert(race_result)
-    one_insertion = Solution.collection.insert_one(race_result)
+    Solution.collection.insert_one(race_result)
   end
 
   #
@@ -60,11 +60,11 @@ class Solution
   #
 
   def all(prototype={})
-    all_records = Solution.collection.find(prototype)
+    Solution.collection.find(prototype)
   end
 
   def find_by_name(fname, lname)
-    found_by_name = Solution.collection.find({:first_name=>fname, :last_name=>lname}).projection(_id:false, number:true, first_name:true, last_name:true)
+    Solution.collection.find({:first_name=>fname, :last_name=>lname}).projection(_id:false, number:true, first_name:true, last_name:true)
   end
 
   #
@@ -72,7 +72,7 @@ class Solution
   #
 
   def find_group_results(group, offset, limit)
-    #place solution here
+    Solution.collection.find({:group=>group}).projection(_id:false, group:false).sort(:secs => 1).skip(offset).limit(limit)
   end
 
   #
@@ -80,11 +80,11 @@ class Solution
   #
 
   def find_between(min, max)
-    #place solution here
+    Solution.collection.find(:secs => {:$lt => max, :$gt => min})
   end
 
   def find_by_letter(letter, offset, limit)
-    #place solution here
+    Solution.collection.find(:last_name => {:$regex => '^'+letter}).sort(:last_name => 1).skip(offset).limit(limit)
   end
 
   #
@@ -92,11 +92,11 @@ class Solution
   #
 
   def update_racer(racer)
-    #place solution here
+    Solution.collection.find(:_id => racer[:_id]).replace_one(racer)
   end
 
   def add_time(number, secs)
-    #place solution here
+    Solution.collection.find(:number => number).update_one({:$inc => {secs: secs}})
   end
 
 end
